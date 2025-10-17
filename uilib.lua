@@ -80,10 +80,63 @@ local library = {
 }
 
 -- intro image flag
-library.IntroShowImages = true
+library.IntroShowImages = false
 
 -- THEME DEFINITIONS
--- Theme initialization removed (was self-referencing)
+-- Initialize default theme colors (fully customizable)
+library.ColorTheme = Color3.fromRGB(159, 115, 255) -- Main accent color
+
+library.Theme = {
+    Background = Color3.fromRGB(34, 34, 34),
+    BackgroundAlt = Color3.fromRGB(28, 28, 28),
+    Accent = library.ColorTheme,
+    AccentDark = Color3.fromRGB(130, 95, 210),
+    Text = Color3.fromRGB(198, 198, 198),
+    TextDim = Color3.fromRGB(170, 170, 170),
+    TextDark = Color3.fromRGB(124, 124, 124),
+    TextPlaceholder = Color3.fromRGB(100, 100, 100),
+    Secondary = Color3.fromRGB(60, 60, 60),
+    Edge = Color3.fromRGB(60, 60, 60)
+}
+
+-- Theme management for tracked UI elements
+library._uiElements = {}
+
+function library:TrackUIElement(element)
+    table.insert(self._uiElements, element)
+end
+
+function library:SetThemeColor(color)
+    self.ColorTheme = color
+    self.Theme.Accent = color
+    self:ApplyTheme()
+end
+
+function library:ApplyTheme()
+    for _, elem in ipairs(self._uiElements) do
+        pcall(function()
+            -- Update elements that use the accent color
+            if elem:IsA("Frame") or elem:IsA("TextButton") or elem:IsA("TextLabel") then
+                if elem:GetAttribute("IsAccentElement") then
+                    if elem.BackgroundColor3 then
+                        elem.BackgroundColor3 = self.Theme.Accent
+                    end
+                    if elem.BorderColor3 then
+                        elem.BorderColor3 = self.Theme.Accent
+                    end
+                    if elem:IsA("TextLabel") or elem:IsA("TextButton") then
+                        if elem.TextColor3 then
+                            elem.TextColor3 = self.Theme.Accent
+                        end
+                    end
+                end
+            end
+            if elem:IsA("ScrollingFrame") and elem.ScrollBarImageColor3 then
+                elem.ScrollBarImageColor3 = self.Theme.Accent
+            end
+        end)
+    end
+end
 
 
 coroutine.wrap(function()
@@ -3651,5 +3704,7 @@ function library:SelfDestruct(mode)
         collectgarbage("collect")
     end
 
+    warn("[JXN Library] Self-destruct executed (" .. mode .. " mode).")
+end
 
 return library
