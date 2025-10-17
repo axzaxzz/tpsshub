@@ -738,7 +738,10 @@ function library:Introduction()
     background.Position = UDim2.new(0.5, 0, 0.5, 0)
     background.Size = UDim2.new(0, 298, 0, 306)
     
-    backgroundGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, library.Theme.Background), ColorSequenceKeypoint.new(1.00, library.Theme.BackgroundAlt)}
+backgroundGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.00, library.Theme.Background), 
+    ColorSequenceKeypoint.new(1.00, library.Theme.BackgroundAlt)
+})
     backgroundGradient.Rotation = 90
     backgroundGradient.Name = "backgroundGradient"
     backgroundGradient.Parent = background
