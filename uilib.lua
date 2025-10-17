@@ -83,18 +83,7 @@ local library = {
 library.IntroShowImages = false
 
 -- THEME DEFINITIONS
-library.Theme = {
-    Background = Color3.fromRGB(34, 34, 34),
-    BackgroundAlt = Color3.fromRGB(28, 28, 28),
-    Accent = Color3.fromRGB(159, 115, 255),
-    AccentDark = Color3.fromRGB(130, 95, 210),
-    Text = Color3.fromRGB(198, 198, 198),
-    TextDim = Color3.fromRGB(170, 170, 170),
-    TextDark = Color3.fromRGB(124, 124, 124),
-    TextPlaceholder = Color3.fromRGB(100, 100, 100),
-    Secondary = Color3.fromRGB(60, 60, 60),
-    Edge = Color3.fromRGB(60, 60, 60)
-}
+-- Theme initialization removed (was self-referencing)
 
 
 coroutine.wrap(function()
@@ -3662,7 +3651,5 @@ function library:SelfDestruct(mode)
         collectgarbage("collect")
     end
 
-    warn("[JXN Library] Self-destruct executed (" .. mode .. " mode).")
-end
 
 return library
