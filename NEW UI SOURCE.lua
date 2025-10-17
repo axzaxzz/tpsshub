@@ -1,5 +1,9 @@
--- USL WITH DEBUG PRINTS (NO LOADSTRING)
-local library = (function()
+local library = {
+    version = "2.0.2",
+    title = title or "xsx " .. tostring(math.random(1,366)),
+    fps = 0,
+    rank = "private"
+}
 -- / Locals
 local Workspace = game:GetService("Workspace")
 local Player = game:GetService("Players").LocalPlayer
@@ -3688,4 +3692,3 @@ function library:SelfDestruct(mode)
     warn("[JXN Library] Self-destruct executed (" .. mode .. " mode).")
 end
 return library
-end)()
