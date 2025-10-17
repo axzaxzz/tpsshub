@@ -3683,9 +3683,6 @@ function library:SelfDestruct(mode)
 
     warn("[JXN Library] se-destruct executed (" .. mode .. " mode).")
 end
-
-print("lib working")
-
 return library
 
 
