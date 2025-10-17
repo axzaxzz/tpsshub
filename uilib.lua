@@ -80,7 +80,7 @@ local library = {
 }
 
 -- intro image flag
-library.IntroShowImages = false
+library.IntroShowImages = true
 
 -- THEME DEFINITIONS
 -- Theme initialization removed (was self-referencing)
