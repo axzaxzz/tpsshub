@@ -1,4 +1,5 @@
-
+-- USL WITH DEBUG PRINTS (NO LOADSTRING)
+local library = (function()
 -- / Locals
 local Workspace = game:GetService("Workspace")
 local Player = game:GetService("Players").LocalPlayer
@@ -36,23 +37,24 @@ local drag = function(obj, latency)
     obj = obj
     latency = latency or 0.06
 
-    toggled = nil
-    input = nil
-    start = nil
+    local toggled = nil
+    local input = nil
+    local start = nil
+    local startPos = nil
 
-    function updateInput(input)
-        local Delta = input.Position - start
+    local function updateInput(inp)
+        local Delta = inp.Position - start
         local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
         TweenService:Create(obj, TweenInfo.new(latency), {Position = Position}):Play()
     end
 
     obj.InputBegan:Connect(function(inp)
-        if (inp.UserInputType == Enum.UserInputType.MouseButton1) then
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 then
             toggled = true
             start = inp.Position
             startPos = obj.Position
             inp.Changed:Connect(function()
-                if (inp.UserInputState == Enum.UserInputState.End) then
+                if inp.UserInputState == Enum.UserInputState.End then
                     toggled = false
                 end
             end)
@@ -60,13 +62,13 @@ local drag = function(obj, latency)
     end)
 
     obj.InputChanged:Connect(function(inp)
-        if (inp.UserInputType == Enum.UserInputType.MouseMovement) then
+        if inp.UserInputType == Enum.UserInputType.MouseMovement then
             input = inp
         end
     end)
 
     UserInputService.InputChanged:Connect(function(inp)
-        if (inp == input and toggled) then
+        if inp == input and toggled then
             updateInput(inp)
         end
     end)
@@ -83,61 +85,20 @@ local library = {
 library.IntroShowImages = false
 
 -- THEME DEFINITIONS
--- Initialize default theme colors (fully customizable)
-library.ColorTheme = Color3.fromRGB(159, 115, 255) -- Main accent color
-
 library.Theme = {
-    Background = Color3.fromRGB(34, 34, 34),
-    BackgroundAlt = Color3.fromRGB(28, 28, 28),
-    Accent = library.ColorTheme,
-    AccentDark = Color3.fromRGB(130, 95, 210),
-    Text = Color3.fromRGB(198, 198, 198),
-    TextDim = Color3.fromRGB(170, 170, 170),
-    TextDark = Color3.fromRGB(124, 124, 124),
+    Background = Color3.fromRGB(25, 25, 30),
+    BackgroundAlt = Color3.fromRGB(30, 30, 35),
+    Accent = Color3.fromRGB(100, 150, 255),
+    AccentDark = Color3.fromRGB(80, 120, 200),
+    Text = Color3.fromRGB(255, 255, 255),
+    TextDim = Color3.fromRGB(180, 180, 180),
+    TextDark = Color3.fromRGB(120, 120, 120),
     TextPlaceholder = Color3.fromRGB(100, 100, 100),
-    Secondary = Color3.fromRGB(60, 60, 60),
-    Edge = Color3.fromRGB(60, 60, 60)
+    Secondary = Color3.fromRGB(40, 40, 45),
+    Edge = Color3.fromRGB(50, 50, 55)
 }
 
--- Theme management for tracked UI elements
-library._uiElements = {}
-
-function library:TrackUIElement(element)
-    table.insert(self._uiElements, element)
-end
-
-function library:SetThemeColor(color)
-    self.ColorTheme = color
-    self.Theme.Accent = color
-    self:ApplyTheme()
-end
-
-function library:ApplyTheme()
-    for _, elem in ipairs(self._uiElements) do
-        pcall(function()
-            -- Update elements that use the accent color
-            if elem:IsA("Frame") or elem:IsA("TextButton") or elem:IsA("TextLabel") then
-                if elem:GetAttribute("IsAccentElement") then
-                    if elem.BackgroundColor3 then
-                        elem.BackgroundColor3 = self.Theme.Accent
-                    end
-                    if elem.BorderColor3 then
-                        elem.BorderColor3 = self.Theme.Accent
-                    end
-                    if elem:IsA("TextLabel") or elem:IsA("TextButton") then
-                        if elem.TextColor3 then
-                            elem.TextColor3 = self.Theme.Accent
-                        end
-                    end
-                end
-            end
-            if elem:IsA("ScrollingFrame") and elem.ScrollBarImageColor3 then
-                elem.ScrollBarImageColor3 = self.Theme.Accent
-            end
-        end)
-    end
-end
-
+-- fixed part one
 
 coroutine.wrap(function()
     RunService.RenderStepped:Connect(function(v)
@@ -146,7 +107,7 @@ coroutine.wrap(function()
 end)()
 
 function library:RoundNumber(int, float)
-    return tonumber(string.format("%." .. (int or 0) .. "f", float))
+    return tonumber(string.format("%." .. (int or 0) .. "f", float)
 end
 
 function library:GetUsername()
@@ -154,7 +115,7 @@ function library:GetUsername()
 end
 
 function library:CheckIfLoaded()
-    if game:IsLoaded() then
+    if game:IsLoaded() then do
         return true
     else
         return false
@@ -174,91 +135,91 @@ function library:GetJobId()
 end
 
 function library:Rejoin()
-    TeleportService:TeleportToPlaceInstance(library:GetPlaceId(), library:GetJobId(), library:GetUserId())
+    TeleportService:TeleportToPlaceInstance(library:GetPlaceId(), library:GetJobId(), library:GetUserId()
 end
 
 function library:Copy(input)
     pcall(function()
-        if syn and syn.write_clipboard then syn.write_clipboard(input) end
+        if syn and syn.write_clipboard then do syn.write_clipboard(input) end
     end)
 end
 end
 
 function library:GetDay(type)
-    if type == "word" then -- day in a full word
+    if type == "word" then do -- day in a full word
         return os.date("%A")
-    elseif type == "short" then -- day in a shortened word
+    elseif type == "short" then do -- day in a shortened word
         return os.date("%a")
-    elseif type == "month" then -- day of the month in digits
+    elseif type == "month" then do -- day of the month in digits
         return os.date("%d")
-    elseif type == "year" then -- day of the year in digits
+    elseif type == "year" then do -- day of the year in digits
         return os.date("%j")
     end
 end
 
 function library:GetTime(type)
-    if type == "24h" then -- time using a 24 hour clock
+    if type == "24h" then do -- time using a 24 hour clock
         return os.date("%H")
-    elseif type == "12h" then -- time using a 12 hour clock
+    elseif type == "12h" then do -- time using a 12 hour clock
         return os.date("%I")
-    elseif type == "minute" then -- time in minutes
+    elseif type == "minute" then do -- time in minutes
         return os.date("%M")
-    elseif type == "half" then -- what part of the day it is (AM or PM)
+    elseif type == "half" then do -- what part of the day it is (AM or PM)
         return os.date("%p")
-    elseif type == "second" then -- time in seconds
+    elseif type == "second" then do -- time in seconds
         return os.date("%S")
-    elseif type == "full" then -- full time
+    elseif type == "full" then do -- full time
         return os.date("%X")
-    elseif type == "ISO" then -- ISO / UTC ( 1min = 1, 1hour = 100)
+    elseif type == "ISO" then do -- ISO / UTC ( 1min = 1, 1hour = 100)
         return os.date("%z")
-    elseif type == "zone" then -- time zone
+    elseif type == "zone" then do -- time zone
         return os.date("%Z") 
     end
 end
 
 function library:GetMonth(type)
-    if type == "word" then -- full month name
+    if type == "word" then do -- full month name
         return os.date("%B")
-    elseif type == "short" then -- month in shortened word
+    elseif type == "short" then do -- month in shortened word
         return os.date("%b")
-    elseif type == "digit" then -- the months digit
+    elseif type == "digit" then do -- the months digit
         return os.date("%m")
     end
 end
 
 function library:GetWeek(type)
-    if type == "year_S" then -- the number of the week in the current year (sunday first day)
+    if type == "year_S" then do -- the number of the week in the current year (sunday first day)
         return os.date("%U")
-    elseif type == "day" then -- the week day
+    elseif type == "day" then do -- the week day
         return os.date("%w")
-    elseif type == "year_M" then -- the number of the week in the current year (monday first day)
+    elseif type == "year_M" then do -- the number of the week in the current year (monday first day)
         return os.date("%W")
     end
 end
 
 function library:GetYear(type)
-    if type == "digits" then -- the second 2 digits of the year
+    if type == "digits" then do -- the second 2 digits of the year
         return os.date("%y")
-    elseif type == "full" then -- the full year
+    elseif type == "full" then do -- the full year
         return os.date("%Y")
     end
 end
 
 function library:UnlockFps(new)
     pcall(function()
-        if setfpscap then setfpscap(new) end
+        if setfpscap then do setfpscap(new) end
     end)
 end
 end
 
 function library:Watermark(text)
-    for i,v in pairs(CoreGuiService:GetChildren()) do
-        if v.Name == "watermark" then
+    for i,v in pairs(CoreGuiService:GetChildren() do
+        if v.Name == "watermark" then do
             v:Destroy()
         end
     end
 
-    tetx = text or "jxn v2"
+    text = text or "jxn v2"
 
     local watermark = Instance.new("ScreenGui")
     local watermarkPadding = Instance.new("UIPadding")
@@ -352,7 +313,7 @@ function library:Watermark(text)
     waterText.TextSize = 14.000
     waterText.RichText = true
 
-    local NewSize = TextService:GetTextSize(waterText.Text, waterText.TextSize, waterText.Font, Vector2.new(math.huge, math.huge))
+    local NewSize = TextService:GetTextSize(waterText.Text, waterText.TextSize, waterText.Font, Vector2.new(math.huge, math.huge)
     waterText.Size = UDim2.new(0, NewSize.X + 8, 0, 24)
 
     waterPadding.Name = "notifPadding"
@@ -382,7 +343,7 @@ function library:Watermark(text)
 
     local WatermarkFunctions = {}
     function WatermarkFunctions:AddWatermark(text)
-        tetx = text or "jxn v2"
+        text = text or "jxn v2"
 
         local edge = Instance.new("Frame")
         local edgeCorner = Instance.new("UICorner")
@@ -474,11 +435,11 @@ function library:Watermark(text)
     
         coroutine.wrap(function()
             TweenService:Create(edge, TweenTable["wm"], {BackgroundTransparency = 0}):Play()
-            TweenService:Create(edge, TweenTable["wm"], {Size = UDim2.new(0, NewSize.x + 10, 0, 26)}):Play()
+            TweenService:Create(edge, TweenTable["wm"], {Size = UDim2.new(0, NewSize.X + 10, 0, 26)}):Play()
             TweenService:Create(background, TweenTable["wm"], {BackgroundTransparency = 0}):Play()
-            TweenService:Create(background, TweenTable["wm"], {Size = UDim2.new(0, NewSize.x + 8, 0, 24)}):Play()
+            TweenService:Create(background, TweenTable["wm"], {Size = UDim2.new(0, NewSize.X + 8, 0, 24)}):Play()
             wait(.2)
-            TweenService:Create(bar, TweenTable["wm"], {Size = UDim2.new(0, NewSize.x + 8, 0, 1)}):Play()
+            TweenService:Create(bar, TweenTable["wm"], {Size = UDim2.new(0, NewSize.X + 8, 0, 1)}):Play()
             wait(.1)
             TweenService:Create(waterText, TweenTable["wm"], {TextTransparency = 0}):Play()
         end)()
@@ -501,10 +462,10 @@ function library:Watermark(text)
             local NewSize = TextService:GetTextSize(waterText.Text, waterText.TextSize, waterText.Font, Vector2.new(math.huge, math.huge))
             waterText.Size = UDim2.new(0, NewSize.X + 8, 0, 24)
             coroutine.wrap(function()
-                TweenService:Create(edge, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 10, 0, 26)}):Play()
-                TweenService:Create(background, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 8, 0, 24)}):Play()
-                TweenService:Create(bar, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 8, 0, 1)}):Play()
-                TweenService:Create(waterText, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 8, 0, 1)}):Play()
+                TweenService:Create(edge, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 10, 0, 26)}):Play()
+                TweenService:Create(background, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 8, 0, 24)}):Play()
+                TweenService:Create(bar, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 8, 0, 1)}):Play()
+                TweenService:Create(waterText, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 8, 0, 1)}):Play()
             end)()
     
             return NewWatermarkFunctions
@@ -533,10 +494,10 @@ function library:Watermark(text)
 
         local NewSize = TextService:GetTextSize(waterText.Text, waterText.TextSize, waterText.Font, Vector2.new(math.huge, math.huge))
         coroutine.wrap(function()
-            TweenService:Create(edge, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 10, 0, 26)}):Play()
-            TweenService:Create(background, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 8, 0, 24)}):Play()
-            TweenService:Create(bar, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 8, 0, 1)}):Play()
-            TweenService:Create(waterText, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.x + 8, 0, 1)}):Play()
+            TweenService:Create(edge, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 10, 0, 26)}):Play()
+            TweenService:Create(background, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 8, 0, 24)}):Play()
+            TweenService:Create(bar, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 8, 0, 1)}):Play()
+            TweenService:Create(waterText, TweenTable["wm_2"], {Size = UDim2.new(0, NewSize.X + 8, 0, 1)}):Play()
         end)()
 
         return WatermarkFunctions
@@ -551,7 +512,7 @@ end
 
 function library:InitNotifications(text, duration, callback)
     for i,v in next, CoreGuiService:GetChildren() do
-        if v.name == "Notifications" then
+        if v.Name == "Notifications" then
             v:Destroy()
         end
     end
@@ -771,6 +732,8 @@ function library:Introduction()
     edgeCorner.Parent = edge
     
     background.Name = "background"
+
+-- fix part 2
     background.Parent = edge
     background.AnchorPoint = Vector2.new(0.5, 0.5)
     background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -864,7 +827,9 @@ function library:Introduction()
     local MinusAmount = -16
     coroutine.wrap(function()
         while wait() do
-            if not jxnLogo or not jxnLogo.Parent then break end
+            if not jxnLogo or not jxnLogo.Parent then
+                break
+            end
             MinusAmount = MinusAmount + 0.4
             TweenService:Create(jxnLogo, TweenTable["jxnRotation"], {Rotation = jxnLogo.Rotation - MinusAmount}):Play()
         end
@@ -1112,10 +1077,10 @@ function library:Init(key)
         page.BackgroundTransparency = 1.000
         page.BorderSizePixel = 0
         page.Size = UDim2.new(0, 412, 0, 358)
-        page.BottomImage = "http://www.roblox.com/asset/?id=3062506202"
-        page.MidImage = "http://www.roblox.com/asset/?id=3062506202"
+        page.BottomImage = "http://www.roblox.com/asset/?id=3.062506202e+09"
+        page.MidImage = "http://www.roblox.com/asset/?id=3.062506202e+09"
         page.ScrollBarThickness = 1
-        page.TopImage = "http://www.roblox.com/asset/?id=3062506202"
+        page.TopImage = "http://www.roblox.com/asset/?id=3.062506202e+09"
         page.ScrollBarImageColor3 = library.Theme.Accent
         page.Visible = false
         
@@ -1137,10 +1102,13 @@ function library:Init(key)
             tabButton.TextColor3 = library.Theme.Accent
             TabLibrary.CurrentTab = title
         end
+
+-- part 3 fix
+        
         
         tabButton.MouseButton1Click:Connect(function()
             TabLibrary.CurrentTab = title
-            for i,v in pairs(container:GetChildren()) do 
+            for i,v in pairs(container:GetChildren()) do
                 if v:IsA("ScrollingFrame") then
                     v.Visible = false
                 end
@@ -1504,6 +1472,9 @@ function library:Init(key)
                 text = text or "button new text"
                 buttonLabel.Text = text
 
+-- part 4 fix
+
+
                 return ButtonFunctions
             end
             --
@@ -1747,17 +1718,17 @@ function library:Init(key)
             function ToggleFunctions:Text(new)
                 new = new or text
                 toggleLabel.Text = new
-                return ToggleFunctionss
+                return ToggleFunctions
             end
             --
             function ToggleFunctions:Hide()
                 toggleButton.Visible = false
-                return ToggleFunctionss
+                return ToggleFunctions
             end
             --
             function ToggleFunctions:Show()
                 toggleButton.Visible = true
-                return ToggleFunctionss
+                return ToggleFunctions
             end   
             --         
             function ToggleFunctions:Change()
@@ -1767,7 +1738,7 @@ function library:Init(key)
                 TweenService:Create(toggleDesign, TweenTable["toggle_form"], {Size = SizeOn}):Play()
                 TweenService:Create(toggleDesign, TweenTable["toggle_form"], {BackgroundTransparency = Transparency}):Play()
                 callback(On)
-                return ToggleFunctionss
+                return ToggleFunctions
             end
             --
             function ToggleFunctions:Remove()
@@ -1782,7 +1753,7 @@ function library:Init(key)
                 TweenService:Create(toggleDesign, TweenTable["toggle_form"], {Size = SizeOn}):Play()
                 TweenService:Create(toggleDesign, TweenTable["toggle_form"], {BackgroundTransparency = Transparency}):Play()
                 callback(On)
-                return ToggleFunctionss
+                return ToggleFunctions
             end
             --
             local callback_t
@@ -1790,7 +1761,7 @@ function library:Init(key)
                 new = new or function() end
                 callback = new
                 callback_t = new
-                return ToggleFunctionss
+                return ToggleFunctions
             end
             UpdatePageSize()
             --
@@ -1869,6 +1840,9 @@ function library:Init(key)
                 local Shortcuts = {
                     Return = "enter"
                 }
+
+-- part 5 fix bomboclat
+    
     
                 keybindButtonLabel.Text = Shortcuts[default_t.Name] or default_t.Name
                 CreateTween("keybind", 0.08)
@@ -1953,7 +1927,7 @@ function library:Init(key)
                 toggleDesign.BackgroundTransparency = 0
                 callback(true)
             end
-            return ToggleFunctionss
+            return ToggleFunctions
         end
 
         function Components:NewKeybind(text, default, callback)
@@ -2235,6 +2209,7 @@ function library:Init(key)
                 textbox.Name = "textbox"
                 textbox.Parent = textboxFolder
                 textbox.BackgroundColor3 = library.Theme.Secondary
+-- part 6 done
                 textbox.Size = UDim2.new(0, 133, 0, 22)
     
                 textboxLayout.Name = "textboxLayout"
@@ -2601,6 +2576,8 @@ function library:Init(key)
                 textboxLabel.RichText = true
 
                 textboxPadding.Name = "textboxPadding"
+
+-- part7 part part 77777777777777777777777777
                 textboxPadding.Parent = textboxLabel
                 textboxPadding.PaddingBottom = UDim.new(0, 6)
                 textboxPadding.PaddingLeft = UDim.new(0, 2)
@@ -2967,6 +2944,8 @@ function library:Init(key)
             selectorFrame.Name = "selectorFrame"
             selectorFrame.Parent = page
             selectorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+-- part 8 8888888888888888888888888888888888888888
             selectorFrame.BackgroundTransparency = 1.000
             selectorFrame.ClipsDescendants = true
             selectorFrame.Position = UDim2.new(0.00499999989, 0, 0.0895953774, 0)
@@ -3334,6 +3313,8 @@ function library:Init(key)
             sliderIndicator.Position = UDim2.new(0, 0, -0.100000001, 0)
             sliderIndicator.Size = UDim2.new(0, 0, 0, 12)
 
+-- fix 9
+
             sliderIndicatorStraint.Name = "sliderIndicatorStraint"
             sliderIndicatorStraint.Parent = sliderIndicator
             sliderIndicatorStraint.MaxSize = Vector2.new(392, 12)
@@ -3409,7 +3390,7 @@ function library:Init(key)
             local function UpdateSlider()
                 TweenService:Create(sliderIndicator, TweenTable["slider_drag"], {Size = UDim2.new(0, math.clamp(Mouse.X - sliderIndicator.AbsolutePosition.X, 0, sliderBackground.AbsoluteSize.X), 0, 12)}):Play()
 
-                ValueNum = math.floor((((tonumber(values.max) - tonumber(values.min)) / sliderBackground.AbsoluteSize.X) * sliderIndicator.AbsoluteSize.X) + tonumber(values.min)) or 0.00
+                ValueNum = math.floor((((tonumber(values.max) - tonumber(values.min)) / sliderBackground.AbsoluteSize.X) * sliderIndicator.AbsoluteSize.X) + tonumber(values.min)) or 0
 
                 local slideText = compare and ValueNum .. compareSign .. tostring(values.max - 1) .. suffix or ValueNum .. suffix
 
@@ -3566,7 +3547,7 @@ function library:Init(key)
         --
         function Components:Open()
             TabLibrary.CurrentTab = title
-            for i,v in pairs(container:GetChildren()) do 
+            for i,v in pairs(container:GetChildren()) do
                 if v:IsA("ScrollingFrame") then
                     v.Visible = false
                 end
@@ -3706,5 +3687,5 @@ function library:SelfDestruct(mode)
 
     warn("[JXN Library] Self-destruct executed (" .. mode .. " mode).")
 end
-
 return library
+end)()
